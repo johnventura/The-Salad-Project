@@ -1,9 +1,43 @@
+/*
+BSD 3-Clause License
+
+Copyright (c) 2017, John Ventura
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <ifaddrs.h>
 #include <netdb.h>
+#include <syslog.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
@@ -39,12 +73,22 @@ int usage(char *progname) {
     return (0);
 }
 
+int destroysyslog(char *msg, int verbose) {
+	if(verbose) {
+		printf("Detected %s", msg);
+	}
+	openlog("shove", LOG_CONS | LOG_NDELAY, LOG_AUTH);
+        syslog(LOG_WARNING, "detected \"%s\"", msg);
+        closelog();
+}
+
 
 int main(int argc, char *argv[]) {
     int sock;
     int pktlen;
     int payloadoffset;
     int c;
+    int verbose = 0;
     uint8_t *pkt;
     uint8_t *tcppayload;
     uint32_t seqtmp;
@@ -73,7 +117,7 @@ int main(int argc, char *argv[]) {
     };
 
 
-    while ((c = getopt(argc, argv, "hi:c:l:")) != -1) {
+    while ((c = getopt(argc, argv, "hi:c:l:v")) != -1) {
 	switch (c) {
 	case 'h':		// probably help
 	    usage(argv[0]);
@@ -87,6 +131,9 @@ int main(int argc, char *argv[]) {
 	    break;
 	case 'l':		// IP address of the listener
 	    listenerip = resolveipv4(optarg);
+	    break;
+	case 'v':
+	    verbose++;
 	    break;
 	default:
 	    break;
@@ -128,7 +175,7 @@ int main(int argc, char *argv[]) {
 		 thissig = thissig->next) {
 		if (memcmp(tcppayload, thissig->netsig, thissig->netsiglen)
 		    == 0) {
-
+			destroysyslog(thissig->name, verbose);
 		    if (thissig->direction == SIGREVERSE) {
 			//spoof the response
 			seqtmp =
