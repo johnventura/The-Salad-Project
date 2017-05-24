@@ -88,6 +88,7 @@ int getrawsock(char *intname) {
     }
     return (sock);
 }
+
 void *sendqueries() {
     int waittime;
     waittime = seconds;
@@ -98,12 +99,35 @@ void *sendqueries() {
 	queryhost(fakehost);
 	if (timemode == 1)
 	    waittime = getrand8() % (seconds * 2);
-	if(verbose) {
-		printf("sleeping for %i seconds\n", waittime);
+	if (verbose) {
+	    printf("sleeping for %i seconds\n", waittime);
 	}
 	sleep(waittime);
     }
     pthread_exit(NULL);
+}
+
+void usage(char *progname) {
+    printf
+	("%s detects and disrupts broadcast name resolution MiTM attacks\n",
+	 progname);
+    printf("\t-i\tinterface to monitor (e.g. \"eth0\")\n");
+    printf("\t-u\ttab delimited list of usernames and passwords\n");
+    printf("\t-t\ttime in seconds between probes\n");
+    printf("\t-p\taverage time in seconds between probes\n");
+    printf("\t-d\tresponses to MiTM detectoin\n");
+    printf("\t\tlog\tlogs the detection\n");
+    printf("\t\thash\tsends credentials from the file -u file\n");
+    printf("\t\tflood\tperform a resource exhaustion attack\n");
+    printf("\t-s\tspecify a known spoofing server instead of detection\n");
+    printf("\t-v\tverbose mode\n");
+    printf("\n\nExamples:\n");
+    printf("\t%s -d \"log hash\" -u ./usernames.txt -t 10 -i eth0\n",
+	   progname);
+    printf
+	("\tThis looks for MiTM servers ever 10 seconds. It also sends a fake hash from the \"usernames.txt\" file and logs the detection\n");
+    printf("\t%s -d \"flood\" -s 10.0.0.23\n", progname);
+    printf("\tThis floods the MiTM server at 10.0.0.23.\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -122,7 +146,7 @@ int main(int argc, char *argv[]) {
     char *server = NULL;
     uint32_t serverip;
     int destroymask = DES_LOG;
-    
+
 
     verbose = 0;
     seconds = 300;		// default time interval
@@ -132,6 +156,8 @@ int main(int argc, char *argv[]) {
     while ((c = getopt(argc, argv, "hi:u:t:p:d:s:v")) != -1) {
 	switch (c) {
 	case 'h':		// probably help
+	    usage(argv[0]);
+	    return (0);
 	    break;
 	case 'i':		// interface to monitor
 	    interface = optarg;
