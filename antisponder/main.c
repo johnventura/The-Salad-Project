@@ -60,6 +60,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 char *fakehost;
 int seconds;
 int timemode;
+int verbose;
 
 int getrawsock(char *intname) {
     struct ifreq ifr;
@@ -97,7 +98,9 @@ void *sendqueries() {
 	queryhost(fakehost);
 	if (timemode == 1)
 	    waittime = getrand8() % (seconds * 2);
-	printf("sleeping for %i seconds\n", waittime);
+	if(verbose) {
+		printf("sleeping for %i seconds\n", waittime);
+	}
 	sleep(waittime);
     }
     pthread_exit(NULL);
@@ -119,12 +122,14 @@ int main(int argc, char *argv[]) {
     char *server = NULL;
     uint32_t serverip;
     int destroymask = DES_LOG;
+    
 
+    verbose = 0;
     seconds = 300;		// default time interval
     timemode = 0;		// 0 == deterministic time
     user = NULL;
 
-    while ((c = getopt(argc, argv, "hi:u:t:p:d:s:")) != -1) {
+    while ((c = getopt(argc, argv, "hi:u:t:p:d:s:v")) != -1) {
 	switch (c) {
 	case 'h':		// probably help
 	    break;
@@ -148,6 +153,9 @@ int main(int argc, char *argv[]) {
 	    break;
 	case 's':		// server to "destroy"
 	    server = optarg;
+	    break;
+	case 'v':
+	    verbose++;
 	    break;
 	default:
 	    break;
@@ -207,7 +215,6 @@ int main(int argc, char *argv[]) {
 	if (ip->protocol == 0x11) {
 	    if (udp->dest == (htons(137))) {
 		memset(resolved, 0x00, NBNAMELEN);
-		printf("NBNS\n");
 		parsenbns((uint8_t *) ip,
 			  MAXPACKETLEN - (sizeof(struct iphdr) +
 					  sizeof(struct iphdr)), resolved);
@@ -217,7 +224,6 @@ int main(int argc, char *argv[]) {
 			   MAXPACKETLEN - (sizeof(struct iphdr) +
 					   sizeof(struct iphdr)),
 			   resolved);
-		printf("LLMNR\n");
 	    }
 	    if ((strlen(resolved) > 0)
 		&& (!strncasecmp(resolved, fakehost, strlen(fakehost)))) {
