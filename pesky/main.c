@@ -107,8 +107,8 @@ int main(int argc, char *argv[]) {
 
     uint8_t *bssid = NULL;	// Access Point (AP) MAC address
     uint8_t *supmac = NULL;	// fake client's MAC address
-
-    while ((c = getopt(argc, argv, "c:k:b:e:ht:p:i:")) != -1) {
+    
+    while ((c = getopt(argc, argv, "c:k:b:e:ht:p:i")) != -1) {
 	switch (c) {
 	case 'b':		// set the BSSID
 	    bssid = asciitomac(optarg);
@@ -145,6 +145,11 @@ int main(int argc, char *argv[]) {
 	    break;
 	}
     }
+    if((bssid == NULL) && (essid == NULL)) {
+	usage(argv[0]);
+	exit(0);
+	}
+
     // allow user to use iwconfig to set the channel
     // or set it here
     if (channel != 0) {

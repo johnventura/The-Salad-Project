@@ -152,18 +152,14 @@ uint8_t getchannel(char *intname) {
 	perror("can't open socket");
 	exit(1);
     }
-/*	
 	if (ioctl(sock, SIOCGIWFREQ, iwr) < 0) {
 		close(sock);
 		free(iwr);
 		perror("can't get frequency");
 		exit(1);
         }
-	PUT THIS BACK IN LATER
-*/
 
     channel = frequencytochannel(iwr->u.freq.m);
-    channel = 7;		// take this out later
     free(iwr);
     close(sock);
 
