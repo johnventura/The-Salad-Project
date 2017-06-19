@@ -27,6 +27,5 @@ Username/Password File Format:
 
 	gthomas liberator123
 	
-	If you want the computer to make up really difficult passwords, just
-	leave out the commas and the passwords.
+If you want the computer to make up really difficult passwords, just leave out the commas and the passwords.
 
