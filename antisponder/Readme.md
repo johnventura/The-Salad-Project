@@ -8,11 +8,13 @@ to their HTTP(S) services and either floods them or sends fraudelent queries.
 Command Line Examples:
 
 antisponder.salad -d "log flood" -t 2 -i eth0
+
 	-d   "log" the attack and "flood" the attacker with fake hashes
 	-t   repeat the detection methodology every 2 seconds
 	-i   use the "eth0" network interface
 
 antisponder.salad -d "hash" -u usernames.txt -p 20 
+
 	-d   send a username/password combination from a text file
 	-u   text file with usernames and possibly passwords
 	-p   repeat the detection methodology at random time interfals that average out to 20 seconds
