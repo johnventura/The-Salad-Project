@@ -9,9 +9,11 @@ The primary configuraiton for this tool comes from an XML configuration file.
 It's format are as follows:
 
 &lt;doc&gt;
+
 	This tag defines the beginning and ending of the configuration data.
 
 &lt;console&gt;
+
 	This tag defines an IP address for a "listener." Many of the signatures
 	are gonig to be "shellcode" or PIC assembly. The IP address defined
 	in this tag is resolved as a 32 bit value, presumably by DNS.
@@ -24,24 +26,29 @@ It's format are as follows:
 	would cause any instance of 0xb7b7b7b7 to be replaced with 0x0a000001.
 
 &lt;sig&gt;
+
 	This tag defines a "signature" which includes a "trigger" and a 
 	"response."  Once the "trigger" is observed within a TCP segment,
 	the "response" is inserted into the data stream via packet spoofing.
 
 &lt;response&gt;
+
 	This tag defines the data that will be inserted into the data stream
 	after the "trigger" is detected.
 
 &lt;rtype&gt;
+
 	This tag is currently unimplemented. In the future, users will be
 	able to define responses with separate files instead of listing them
 	within the configuration file.
  
 &lt;name&gt;
+
 	This tag allows users to "name" their signatures.
 	This data may be used in alerting.
 
 &lt;direction&gt;
+
 	This value will be either "forward" or "reverse". Forward signatures
 	will cause the response data to be appended to the data sent in the 
 	"trigger". Reverse signatures will send their data as if they were
@@ -49,10 +56,12 @@ It's format are as follows:
 
 
 Format:
+
 	Much of the data in the configuration file will not be easily defined
 	in text. "Binary" or "signed" input (or any bytes greater than 0x7f)
 	can therefore be difficult to represent. The file format allows users
 	to define values using "HTMLesque" escaping.  
+	
 
 	For example, the string "%41%43CD" will be understood as "ABCD", and
 	the highest value single byte can be represented as "%ff". 
