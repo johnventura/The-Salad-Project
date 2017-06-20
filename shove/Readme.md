@@ -5,12 +5,13 @@ channels. It sniffs for TCP segments with known values or "trigger".
 Once it observes these "triggers," it inserts other segments or "responses".
 
 Configuration:
+
 The primary configuraiton for this tool comes from an XML configuration file. 
 It's format are as follows:
 
 &lt;doc&gt;
 
-	This tag defines the beginning and ending of the configuration data.
+This tag defines the beginning and ending of the configuration data.
 
 &lt;console&gt;
 
