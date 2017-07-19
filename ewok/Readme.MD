@@ -70,6 +70,7 @@ This above example requires the user to have a plaintext version of the Python
 staging software. This file is actual software, and distributing it without the
 consent of its authors is problematic. Users can acquire their own copy by 
 executing the following command (the script is included in this distribution:
+
 	./grabtemplate.sh ./template.sh
 
 This program also allows users to create their own stage 2 payload for 
