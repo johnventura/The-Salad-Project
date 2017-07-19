@@ -21,6 +21,10 @@ Shove
 
 	A MiTM utility that sniffs for pre-defined TCP segments and inserts
 	scripted responses into the data stream
+Ewok
+
+	A MiTM utility that targets Powershell Empire by repackaging "stage 2" 
+	payloads.
 
 Pesky
 
