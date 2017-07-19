@@ -10,7 +10,7 @@ does not need to involve high price "magic boxes."
 The name "Salad" comes from "Seek-Locate-Destroy", which is the title of an 
 episode of the groundbreaking space opera television show Blakes 7. 
 In this episode, several characters engage in a plot to break encryption
-by stealing a cryptograghy machine.
+by stealing an encryption/decryption device.
 
 
 
